@@ -1,115 +1,135 @@
-<!DOCTYPE html><html lang="fr">
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tiers Liste</title>
-  <style>
-    body {
-      background-color: #1e1e2f;
-      color: white;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }h1 {
-  margin-top: 20px;
-  font-size: 2.5rem;
-  color: #f9f9f9;
-}
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tiers Liste</title>
+<style>
+  body {
+    background-color: #1f1f1f;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-p {
-  font-size: 1.2rem;
-  color: #ccc;
-}
+  h1 {
+    margin-top: 20px;
+  }
 
-.tierlist {
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  max-width: 1000px;
-  margin-top: 30px;
-}
+  p {
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
 
-.tier {
-  display: flex;
-  align-items: center;
-  margin: 6px 0;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-}
+  .tierlist {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: 1000px;
+    margin-top: 30px;
+    gap: 8px;
+  }
 
-.tier-label {
-  width: 60px;
-  text-align: center;
-  font-weight: bold;
-  padding: 12px;
-  color: white;
-}
+  .tier {
+    display: flex;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+    height: 80px; /* même hauteur partout */
+  }
 
-.tier-container {
-  flex-grow: 1;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 10px;
-  background-color: #2a2a3f;
-  min-height: 80px;
-}
+  /* La colonne avec la lettre (S, A, etc) */
+  .tier-label {
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    padding: 0;
+    color: white;
+    font-size: 1.5em;
+    user-select: none;
+  }
 
-.item {
-  background-color: #3e3e5c;
-  border-radius: 6px;
-  padding: 6px 10px;
-  margin: 5px;
-  cursor: grab;
-  transition: transform 0.2s ease;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+  /* La zone où on met les items */
+  .tier-container {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+    background-color: #2e2e2e;
+    gap: 8px;
+    overflow-y: auto;
+    align-items: center;
+  }
 
-.item img {
-  width: 40px;
-  height: 40px;
-  border-radius: 4px;
-  object-fit: cover;
-}
+  /* Les éléments déplacables */
+  .item {
+    background-color: #444;
+    border-radius: 5px;
+    padding: 4px 6px;
+    margin: 0;
+    cursor: grab;
+    transition: transform 0.2s ease;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60px;
+    height: 70px;
+  }
 
-.item.dragging {
-  opacity: 0.5;
-  transform: scale(1.05);
-}
+  .item.dragging {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
 
-.add-button {
-  margin-top: 20px;
-  background-color: #5a5aff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 6px;
-  font-size: 1rem;
-}
+  /* Image dans les éléments */
+  .item img {
+    max-width: 50px;
+    max-height: 40px;
+    object-fit: contain;
+    border-radius: 4px;
+  }
 
-.add-button:hover {
-  background-color: #7777ff;
-}
+  .item span {
+    margin-top: 4px;
+    font-size: 0.8em;
+    text-align: center;
+    word-break: break-word;
+  }
 
-.tier[data-tier="S"] .tier-label { background-color: #e74c3c; }  /* rouge vif */
-.tier[data-tier="A"] .tier-label { background-color: #f39c12; }  /* orange */
-.tier[data-tier="B"] .tier-label { background-color: #3498db; }  /* bleu */
-.tier[data-tier="C"] .tier-label { background-color: #2ecc71; }  /* vert */
-.tier[data-tier="D"] .tier-label { background-color: #7f8c8d; }  /* gris foncé */
-.tier[data-tier="NC"] .tier-label { background-color: #9b59b6; } /* violet */
+  .add-button {
+    margin-top: 20px;
+    background-color: #555;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
 
-  </style>
+  .add-button:hover {
+    background-color: #777;
+  }
+
+  /* Couleurs des labels */
+  .tier[data-tier="S"] .tier-label { background-color: #ff4444; }
+  .tier[data-tier="A"] .tier-label { background-color: #ff9933; }
+  .tier[data-tier="B"] .tier-label { background-color: #33aaff; }
+  .tier[data-tier="C"] .tier-label { background-color: #33cc33; }
+  .tier[data-tier="D"] .tier-label { background-color: #999999; }
+</style>
 </head>
 <body>
-  <h1>Tiers liste</h1>
-  <p>Créer et partager tes propres connaissances</p>  <div class="tierlist">
+  <h1>Tiers Liste</h1>
+  <p>Créer et partager tes propres connaissances</p>
+
+  <div class="tierlist">
     <div class="tier" data-tier="S">
       <div class="tier-label">S</div>
       <div class="tier-container" data-dropzone="true"></div>
@@ -130,59 +150,65 @@ p {
       <div class="tier-label">D</div>
       <div class="tier-container" data-dropzone="true"></div>
     </div>
-      <button class="add-button" onclick="addItem()">Ajouter un élément</button>
+  </div>
 
-  <script>
-    let draggedItem = null;
+  <button class="add-button" onclick="addItem()">Ajouter un élément</button>
 
-    function addItem() {
-      const itemText = prompt("Quel est le nom de ton élément à classer ?");
-      if (!itemText) return;
+<script>
+  let draggedItem = null;
 
-      const itemImageUrl = prompt("Colle le lien de ton image (ou laisse vide)");
+  // Fonction pour ajouter un nouvel élément avec image + nom
+  function addItem() {
+    const name = prompt("Nom de l'élément à classer ?");
+    if (!name) return;
 
-      const newItem = document.createElement('div');
-      newItem.className = 'item';
-      newItem.setAttribute('draggable', true);
-      if (itemImageUrl) {
-        const img = document.createElement('img');
-        img.src = itemImageUrl;
-        img.alt = itemText;
-        newItem.appendChild(img);
-      }
+    const imageUrl = prompt("URL de l'image de l'élément ? (Laisser vide pour aucune image)");
 
-      const span = document.createElement('span');
-      span.textContent = itemText;
-      newItem.appendChild(span);
+    const newItem = document.createElement('div');
+    newItem.className = 'item';
+    newItem.setAttribute('draggable', true);
 
-      addDragEvents(newItem);
-
-      const ncZone = document.querySelector('.tier[data-tier="NC"] .tier-container');
-      ncZone.appendChild(newItem);
+    if (imageUrl) {
+      const img = document.createElement('img');
+      img.src = imageUrl;
+      img.alt = name;
+      newItem.appendChild(img);
     }
 
-    function addDragEvents(item) {
-      item.addEventListener('dragstart', () => {
-        draggedItem = item;
-        item.classList.add('dragging');
-      });
+    const span = document.createElement('span');
+    span.textContent = name;
+    newItem.appendChild(span);
 
-      item.addEventListener('dragend', () => {
-        draggedItem = null;
-        item.classList.remove('dragging');
-      });
-    }
+    addDragEvents(newItem);
 
-    document.querySelectorAll('[data-dropzone="true"]').forEach(zone => {
-      zone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-      });
+    // Par défaut, on place l'item dans la colonne D (la plus basse)
+    document.querySelector('.tier[data-tier="D"] .tier-container').appendChild(newItem);
+  }
 
-      zone.addEventListener('drop', () => {
-        if (draggedItem) {
-          zone.appendChild(draggedItem);
-        }
-      });
+  // Ajoute les événements de drag & drop sur un élément
+  function addDragEvents(item) {
+    item.addEventListener('dragstart', (e) => {
+      draggedItem = item;
+      item.classList.add('dragging');
     });
-  </script></body>
+
+    item.addEventListener('dragend', () => {
+      draggedItem = null;
+      item.classList.remove('dragging');
+    });
+  }
+
+  // Gestion des zones de drop
+  document.querySelectorAll('[data-dropzone="true"]').forEach(zone => {
+    zone.addEventListener('dragover', e => e.preventDefault());
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      if (draggedItem) {
+        zone.appendChild(draggedItem);
+      }
+    });
+  });
+</script>
+
+</body>
 </html>
