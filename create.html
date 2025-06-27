@@ -5,7 +5,7 @@
   <title>Tiers Liste</title>
   <style>
     body {
-      background-color: #1f1f1f;
+      background-color: #1e1e2f;
       color: white;
       font-family: Arial, sans-serif;
       margin: 0;
@@ -15,6 +15,13 @@
       align-items: center;
     }h1 {
   margin-top: 20px;
+  font-size: 2.5rem;
+  color: #f9f9f9;
+}
+
+p {
+  font-size: 1.2rem;
+  color: #ccc;
 }
 
 .tierlist {
@@ -28,17 +35,17 @@
 .tier {
   display: flex;
   align-items: center;
-  margin: 4px 0;
-  border-radius: 5px;
+  margin: 6px 0;
+  border-radius: 8px;
   overflow: hidden;
-  transition: all 0.2s ease-in-out;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
 }
 
 .tier-label {
   width: 60px;
   text-align: center;
   font-weight: bold;
-  padding: 10px;
+  padding: 12px;
   color: white;
 }
 
@@ -47,55 +54,56 @@
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
-  background-color: #2e2e2e;
-  min-height: 70px;
+  background-color: #2a2a3f;
+  min-height: 80px;
 }
 
 .item {
-  background-color: #444;
-  border-radius: 5px;
+  background-color: #3e3e5c;
+  border-radius: 6px;
   padding: 6px 10px;
   margin: 5px;
   cursor: grab;
   transition: transform 0.2s ease;
   user-select: none;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 10px;
 }
 
 .item img {
-  max-width: 80px;
-  max-height: 80px;
+  width: 40px;
+  height: 40px;
   border-radius: 4px;
-  margin-bottom: 5px;
+  object-fit: cover;
 }
 
 .item.dragging {
   opacity: 0.5;
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .add-button {
-  margin: 20px 0;
-  background-color: #555;
+  margin-top: 20px;
+  background-color: #5a5aff;
   color: white;
   border: none;
   padding: 10px 20px;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 6px;
+  font-size: 1rem;
 }
 
 .add-button:hover {
-  background-color: #777;
+  background-color: #7777ff;
 }
 
-.tier[data-tier="S"] .tier-label { background-color: #ff4444; }
-.tier[data-tier="A"] .tier-label { background-color: #ff9933; }
-.tier[data-tier="B"] .tier-label { background-color: #33aaff; }
-.tier[data-tier="C"] .tier-label { background-color: #33cc33; }
-.tier[data-tier="D"] .tier-label { background-color: #999999; }
-.tier[data-tier="NC"] .tier-label { background-color: #6666cc; }
+.tier[data-tier="S"] .tier-label { background-color: #e74c3c; }  /* rouge vif */
+.tier[data-tier="A"] .tier-label { background-color: #f39c12; }  /* orange */
+.tier[data-tier="B"] .tier-label { background-color: #3498db; }  /* bleu */
+.tier[data-tier="C"] .tier-label { background-color: #2ecc71; }  /* vert */
+.tier[data-tier="D"] .tier-label { background-color: #7f8c8d; }  /* gris foncé */
+.tier[data-tier="NC"] .tier-label { background-color: #9b59b6; } /* violet */
 
   </style>
 </head>
@@ -124,57 +132,41 @@
     </div>
     <div class="tier" data-tier="NC">
       <div class="tier-label">NC</div>
-      <div class="tier-container" data-dropzone="true" id="uncategorized"></div>
+      <div class="tier-container" data-dropzone="true"></div>
     </div>
-  </div><button class="add-button" onclick="document.getElementById('popup').style.display = 'block'">Ajouter un élément</button>
+  </div><button class="add-button" onclick="addItem()">Ajouter un élément</button>
 
-  <div id="popup" style="display:none; background:#2e2e2e; padding:20px; border-radius:10px; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);">
-    <h3>Nouvel élément</h3>
-    <input type="text" id="itemName" placeholder="Nom" style="margin-bottom:10px;"><br>
-    <input type="file" id="itemImage" accept="image/*" style="margin-bottom:10px;"><br>
-    <button onclick="addItem()">Ajouter</button>
-    <button onclick="document.getElementById('popup').style.display='none'">Annuler</button>
-  </div>  <script>
+  <script>
     let draggedItem = null;
 
     function addItem() {
-      const name = document.getElementById('itemName').value;
-      const file = document.getElementById('itemImage').files[0];
-      if (!name) return;
+      const itemText = prompt("Quel est le nom de ton élément à classer ?");
+      if (!itemText) return;
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const newItem = document.createElement('div');
-        newItem.className = 'item';
-        newItem.setAttribute('draggable', true);
+      const itemImageUrl = prompt("Colle le lien de ton image (ou laisse vide)");
 
-        if (file) {
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          newItem.appendChild(img);
-        }
-
-        const text = document.createElement('span');
-        text.textContent = name;
-        newItem.appendChild(text);
-
-        addDragEvents(newItem);
-        document.getElementById('uncategorized').appendChild(newItem);
-
-        document.getElementById('popup').style.display = 'none';
-        document.getElementById('itemName').value = '';
-        document.getElementById('itemImage').value = '';
-      };
-
-      if (file) {
-        reader.readAsDataURL(file);
-      } else {
-        reader.onload({ target: { result: '' } });
+      const newItem = document.createElement('div');
+      newItem.className = 'item';
+      newItem.setAttribute('draggable', true);
+      if (itemImageUrl) {
+        const img = document.createElement('img');
+        img.src = itemImageUrl;
+        img.alt = itemText;
+        newItem.appendChild(img);
       }
+
+      const span = document.createElement('span');
+      span.textContent = itemText;
+      newItem.appendChild(span);
+
+      addDragEvents(newItem);
+
+      const ncZone = document.querySelector('.tier[data-tier="NC"] .tier-container');
+      ncZone.appendChild(newItem);
     }
 
     function addDragEvents(item) {
-      item.addEventListener('dragstart', (e) => {
+      item.addEventListener('dragstart', () => {
         draggedItem = item;
         item.classList.add('dragging');
       });
@@ -190,7 +182,7 @@
         e.preventDefault();
       });
 
-      zone.addEventListener('drop', (e) => {
+      zone.addEventListener('drop', () => {
         if (draggedItem) {
           zone.appendChild(draggedItem);
         }
