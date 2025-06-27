@@ -20,14 +20,13 @@
       display: flex;
       flex-direction: column;
       width: 90%;
-      max-width: 900px;
+      max-width: 1000px;
       margin: 0 auto;
-      gap: 8px;
+      gap: 6px;
     }
 
     .tier-row {
       display: flex;
-      align-items: center;
       height: 80px;
       border-radius: 8px;
       overflow: hidden;
@@ -35,50 +34,171 @@
 
     .tier-label {
       width: 80px;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-weight: bold;
       color: white;
       font-size: 1.5rem;
-      padding: 0.5rem;
     }
 
     .tier-content {
       flex-grow: 1;
       background-color: #2e2e2e;
-      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 5px;
+      gap: 10px;
+      overflow-x: auto;
     }
 
-    .tier-S { background-color: #e53935; }
-    .tier-A { background-color: #fb8c00; }
-    .tier-B { background-color: #fdd835; color: black; }
-    .tier-C { background-color: #43a047; }
-    .tier-D { background-color: #1e88e5; }
+    .tier-S .tier-label { background-color: #e53935; }
+    .tier-A .tier-label { background-color: #fb8c00; }
+    .tier-B .tier-label { background-color: #fdd835; color: black; }
+    .tier-C .tier-label { background-color: #43a047; }
+    .tier-D .tier-label { background-color: #1e88e5; }
+
+    .item-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .item {
+      width: 80px;
+      height: 80px;
+      background-color: #444;
+      border: 2px solid #666;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 12px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: grab;
+    }
+
+    .item img {
+      max-width: 100%;
+      max-height: 60px;
+      object-fit: contain;
+    }
+
+    #add-item-form {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px;
+    }
+
+    #add-item-form input {
+      background-color: #2e2e2e;
+      color: white;
+      border: 1px solid #555;
+      padding: 5px;
+    }
+
+    #add-item-form button {
+      padding: 5px 10px;
+      background-color: #666;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    #add-item-form button:hover {
+      background-color: #888;
+    }
   </style>
 </head>
 <body>
   <h1>Créer ta tier list</h1>
 
   <div class="tierlist-container">
-    <div class="tier-row">
-      <div class="tier-label tier-S">S</div>
-      <div class="tier-content"></div>
+    <div class="tier-row tier-S">
+      <div class="tier-label">S</div>
+      <div class="tier-content" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
     </div>
-    <div class="tier-row">
-      <div class="tier-label tier-A">A</div>
-      <div class="tier-content"></div>
+    <div class="tier-row tier-A">
+      <div class="tier-label">A</div>
+      <div class="tier-content" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
     </div>
-    <div class="tier-row">
-      <div class="tier-label tier-B">B</div>
-      <div class="tier-content"></div>
+    <div class="tier-row tier-B">
+      <div class="tier-label">B</div>
+      <div class="tier-content" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
     </div>
-    <div class="tier-row">
-      <div class="tier-label tier-C">C</div>
-      <div class="tier-content"></div>
+    <div class="tier-row tier-C">
+      <div class="tier-label">C</div>
+      <div class="tier-content" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
     </div>
-    <div class="tier-row">
-      <div class="tier-label tier-D">D</div>
-      <div class="tier-content"></div>
+    <div class="tier-row tier-D">
+      <div class="tier-label">D</div>
+      <div class="tier-content" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
     </div>
   </div>
+
+  <div id="add-item-form">
+    <input type="text" id="item-title" placeholder="Nom (ex: Blinding Lights)">
+    <input type="file" id="item-image" accept="image/*">
+    <button onclick="addItem()">Ajouter</button>
+  </div>
+
+  <div class="item-pool" id="item-pool"></div>
+
+  <script>
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      var data = ev.dataTransfer.getData("text");
+      var item = document.getElementById(data);
+      ev.target.appendChild(item);
+    }
+
+    function addItem() {
+      const title = document.getElementById("item-title").value;
+      const file = document.getElementById("item-image").files[0];
+
+      if (!title || !file) {
+        alert("Ajoute un nom et une image !");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.draggable = true;
+        div.id = "item-" + Date.now();
+        div.ondragstart = drag;
+
+        const img = document.createElement("img");
+        img.src = e.target.result;
+
+        const span = document.createElement("span");
+        span.textContent = title;
+
+        div.appendChild(img);
+        div.appendChild(span);
+
+        document.getElementById("item-pool").appendChild(div);
+      };
+      reader.readAsDataURL(file);
+
+      // Reset inputs
+      document.getElementById("item-title").value = "";
+      document.getElementById("item-image").value = "";
+    }
+  </script>
 </body>
 </html>
