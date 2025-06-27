@@ -1,42 +1,29 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Créer ma Tier List</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Ma Tier List</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Ma Tier List Personnalisée</h1>
-  </header>
 
-  <section class="settings">
-    <h2>Rangs personnalisables</h2>
-    <div id="rank-names">
-      <label><input type="text" value="S" data-rank="S" /></label>
-      <label><input type="text" value="A" data-rank="A" /></label>
-      <label><input type="text" value="B" data-rank="B" /></label>
-      <label><input type="text" value="C" data-rank="C" /></label>
-      <label><input type="text" value="D" data-rank="D" /></label>
-    </div>
-  </section>
+  <h1>Créer ta Tier List</h1>
 
-  <section class="upload">
-    <h2>Ajouter un élément</h2>
-    <input type="file" id="image-upload" accept="image/*" />
-    <input type="text" id="image-title" placeholder="Nom de l’élément" />
+  <section id="controls">
+    <input type="file" id="image-upload" accept="image/*">
+    <input type="text" id="image-title" placeholder="Titre de l'élément">
     <button id="add-element">Ajouter</button>
   </section>
 
-  <!-- Zone de stockage par défaut (en attente) -->
-  <section id="storage-area" class="tier">
-    <span class="label">En attente</span>
-    <div class="tier-content"></div>
+  <section id="rank-names">
+    <label>S : <input type="text" data-rank="S" placeholder="Nom du rang S"></label>
+    <label>A : <input type="text" data-rank="A" placeholder="Nom du rang A"></label>
+    <label>B : <input type="text" data-rank="B" placeholder="Nom du rang B"></label>
+    <label>C : <input type="text" data-rank="C" placeholder="Nom du rang C"></label>
+    <label>D : <input type="text" data-rank="D" placeholder="Nom du rang D"></label>
   </section>
 
-  <!-- Tier list -->
-  <section id="tier-list" class="tier-list">
+  <section id="tier-list">
     <div class="tier" data-rank="S">
       <span class="label">S</span>
       <div class="tier-content"></div>
@@ -59,12 +46,14 @@
     </div>
   </section>
 
-  <section class="download">
-    <button id="download-btn">Télécharger la Tier List</button>
+  <section id="storage-area" class="tier">
+    <span class="label">En attente</span>
+    <div class="tier-content"></div>
   </section>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <button id="download-btn">Télécharger la tier list</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
