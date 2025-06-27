@@ -159,3 +159,42 @@ downloadButton.addEventListener("click", () => {
     link.click();
   });
 });
+function enableLongPressToDelete(element) {
+  let pressTimer;
+
+  element.addEventListener("mousedown", () => {
+    pressTimer = setTimeout(() => {
+      if (confirm("Supprimer cet élément ?")) {
+        element.remove();
+      }
+    }, 1500);
+  });
+
+  element.addEventListener("mouseup", () => {
+    clearTimeout(pressTimer);
+  });
+
+  element.addEventListener("mouseleave", () => {
+    clearTimeout(pressTimer);
+  });
+}
+function makeDraggable(el) {
+  let offsetX, offsetY;
+
+  el.addEventListener("dragstart", (e) => {
+    offsetX = e.offsetX;
+    offsetY = e.offsetY;
+  });
+
+  document.addEventListener("dragover", (e) => {
+    e.preventDefault();
+  });
+
+  document.addEventListener("drop", (e) => {
+    e.preventDefault();
+    el.style.left = `${e.pageX - offsetX}px`;
+    el.style.top = `${e.pageY - offsetY}px`;
+  });
+
+  enableLongPressToDelete(el); // ← Tu AJOUTES cette ligne ici
+}
