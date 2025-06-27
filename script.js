@@ -59,35 +59,37 @@ addElementBtn.addEventListener('click', () => {
   imageUpload.value = '';
   imageTitle.value = '';
 });
+function createElement(imageSrc, title) {
+  const element = document.createElement("div");
+  element.classList.add("tier-item");
+  element.setAttribute("draggable", "true");
 
-function createElement(imgSrc, title) {
-  const element = document.createElement('div');
-  element.className = 'element';
-  element.draggable = true;
-
-  element.addEventListener('dragstart', (e) => {
-    e.dataTransfer.setData('text/plain', '');
-    element.classList.add('dragging');
-  });
-
-  element.addEventListener('dragend', () => {
-    element.classList.remove('dragging');
-    saveTierList();
-  });
-
-  if (imgSrc) {
-    const img = document.createElement('img');
-    img.src = imgSrc;
+  if (imageSrc) {
+    const img = document.createElement("img");
+    img.src = imageSrc;
+    img.alt = title;
     element.appendChild(img);
   }
 
   if (title) {
-    const titleDiv = document.createElement('div');
-    titleDiv.textContent = title;
-    element.appendChild(titleDiv);
+    const caption = document.createElement("p");
+    caption.textContent = title;
+    element.appendChild(caption);
   }
 
-  return element;
+  // ❌ Ajout d’un bouton "supprimer"
+  const deleteBtn = document.createElement("button");
+  deleteBtn.classList.add("delete-btn");
+  deleteBtn.textContent = "✖";
+  deleteBtn.addEventListener("click", () => {
+    element.remove();
+  });
+  element.appendChild(deleteBtn);
+
+  // Ajout à la zone de dépôt initiale
+  document.querySelector(".upload").appendChild(element);
+
+  makeDraggable(element);
 }
 
 function addToStorage(element) {
