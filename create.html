@@ -1,107 +1,187 @@
-<!DOCTYPE html>
-<html lang="fr">
+<!DOCTYPE html><html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tier List</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            display: flex;
-            justify-content: space-between;
-            width: 80%;
-        }
-        .tier-column {
-            width: 22%;
-            background-color: #e0e0e0;
-            border-radius: 8px;
-            padding: 10px;
-            position: relative;
-        }
-        .tier-column h3 {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .tier-column .tier-item {
-            width: 100%;
-            padding: 10px;
-            background-color: #fff;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-        .tier-column .tier-item.dragging {
-            opacity: 0.5;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Créer ta tier list</title>
+  <style>
+    body {
+      background-color: #1f1f1f;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }h1 {
+  margin-top: 20px;
+}
 
-        /* Hover effect on the column */
-        .tier-column:hover {
-            background-color: #d4d4d4;
-        }
+.controls {
+  margin: 20px;
+  display: flex;
+  gap: 10px;
+}
 
-        /* Custom animations for dragging */
-        .dragging {
-            cursor: move;
-            transition: transform 0.2s ease-in-out;
-        }
-    </style>
+input[type="text"] {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}
+
+button {
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #777;
+}
+
+.tierlist {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 1000px;
+  margin-top: 10px;
+}
+
+.tier {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+}
+
+.tier-label {
+  width: 60px;
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
+  color: white;
+}
+
+.tier-container {
+  flex-grow: 1;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  background-color: #2e2e2e;
+  min-height: 70px;
+}
+
+.item {
+  background-color: #444;
+  border-radius: 5px;
+  padding: 6px 10px;
+  margin: 5px;
+  cursor: grab;
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+.item.dragging {
+  opacity: 0.5;
+  transform: scale(1.1);
+}
+
+.tier[data-tier="S"] .tier-label { background-color: #ff4444; }
+.tier[data-tier="A"] .tier-label { background-color: #ff9933; }
+.tier[data-tier="B"] .tier-label { background-color: #33aaff; }
+.tier[data-tier="C"] .tier-label { background-color: #33cc33; }
+.tier[data-tier="D"] .tier-label { background-color: #999999; }
+
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="tier-column" id="S-tier" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <h3 style="color: red;">S</h3>
-            <div class="tier-item" draggable="true" ondragstart="drag(event)" id="item1">
-                The Weeknd Song 1
-            </div>
-            <div class="tier-item" draggable="true" ondragstart="drag(event)" id="item2">
-                The Weeknd Song 2
-            </div>
-        </div>
-        <div class="tier-column" id="A-tier" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <h3 style="color: orange;">A</h3>
-        </div>
-        <div class="tier-column" id="B-tier" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <h3 style="color: blue;">B</h3>
-        </div>
-        <div class="tier-column" id="C-tier" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <h3 style="color: green;">C</h3>
-        </div>
-        <div class="tier-column" id="D-tier" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <h3 style="color: gray;">D</h3>
-        </div>
+  <h1>CRDIS</h1>
+  <p>Crée et partage tes propres classements</p>  <div class="controls">
+    <input type="text" id="newItemText" placeholder="Ajouter un élément">
+    <button onclick="addItem()">Ajouter</button>
+    <button onclick="saveTierlist()">Enregistrer ma tier list</button>
+  </div>  <div class="tierlist">
+    <div class="tier" data-tier="S">
+      <div class="tier-label">S</div>
+      <div class="tier-container" data-dropzone="true"></div>
     </div>
+    <div class="tier" data-tier="A">
+      <div class="tier-label">A</div>
+      <div class="tier-container" data-dropzone="true"></div>
+    </div>
+    <div class="tier" data-tier="B">
+      <div class="tier-label">B</div>
+      <div class="tier-container" data-dropzone="true"></div>
+    </div>
+    <div class="tier" data-tier="C">
+      <div class="tier-label">C</div>
+      <div class="tier-container" data-dropzone="true"></div>
+    </div>
+    <div class="tier" data-tier="D">
+      <div class="tier-label">D</div>
+      <div class="tier-container" data-dropzone="true"></div>
+    </div>
+  </div>  <script>
+    let draggedItem = null;
 
-    <script>
-        function allowDrop(ev) {
-            ev.preventDefault();
-        }
+    function addItem() {
+      const text = document.getElementById('newItemText').value.trim();
+      if (!text) return;
 
-        function drag(ev) {
-            ev.dataTransfer.setData("text", ev.target.id);
-            ev.target.classList.add("dragging");
-        }
+      const item = document.createElement('div');
+      item.className = 'item';
+      item.textContent = text;
+      item.setAttribute('draggable', true);
+      addDragEvents(item);
 
-        function drop(ev) {
-            ev.preventDefault();
-            var data = ev.dataTransfer.getData("text");
-            var droppedElement = document.getElementById(data);
-            var targetColumn = ev.target;
-            
-            if (targetColumn.className.includes("tier-column")) {
-                targetColumn.appendChild(droppedElement);
-                droppedElement.classList.remove("dragging");  // Reset dragging style after drop
-            }
+      document.querySelector('[data-tier="D"] .tier-container').appendChild(item);
+      document.getElementById('newItemText').value = '';
+    }
+
+    function addDragEvents(item) {
+      item.addEventListener('dragstart', () => {
+        draggedItem = item;
+        item.classList.add('dragging');
+      });
+
+      item.addEventListener('dragend', () => {
+        draggedItem = null;
+        item.classList.remove('dragging');
+      });
+    }
+
+    document.querySelectorAll('[data-dropzone="true"]').forEach(container => {
+      container.addEventListener('dragover', e => e.preventDefault());
+      container.addEventListener('drop', e => {
+        e.preventDefault();
+        if (draggedItem) {
+          void draggedItem.offsetWidth;
+          container.appendChild(draggedItem);
         }
-    </script>
-</body>
+      });
+    });
+
+    function saveTierlist() {
+      const tiers = {};
+      document.querySelectorAll('.tier').forEach(tier => {
+        const label = tier.dataset.tier;
+        const items = Array.from(tier.querySelectorAll('.item')).map(item => item.textContent);
+        tiers[label] = items;
+      });
+
+      const blob = new Blob([JSON.stringify(tiers, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'ma-tierlist.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script></body>
 </html>
