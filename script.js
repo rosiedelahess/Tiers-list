@@ -198,3 +198,42 @@ function makeDraggable(el) {
 
   enableLongPressToDelete(el); // ← Tu AJOUTES cette ligne ici
 }
+document.addEventListener('DOMContentLoaded', () => {
+  let longPressTimer;
+
+  // Fonction pour activer l'appui long
+  function enableLongPressDelete(element) {
+    element.addEventListener('mousedown', (e) => {
+      e.preventDefault(); // Empêche le drag immédiat
+      longPressTimer = setTimeout(() => {
+        if (confirm('Supprimer cet élément ?')) {
+          element.remove();
+        }
+      }, 1200); // 1,2 seconde pour déclencher la suppression
+    });
+
+    element.addEventListener('mouseup', () => {
+      clearTimeout(longPressTimer);
+    });
+
+    element.addEventListener('mouseleave', () => {
+      clearTimeout(longPressTimer);
+    });
+  }
+
+  // On applique ça à chaque nouvel élément
+  const observer = new MutationObserver((mutationsList) => {
+    for (let mutation of mutationsList) {
+      for (let node of mutation.addedNodes) {
+        if (node.classList && node.classList.contains('tier-item')) {
+          enableLongPressDelete(node);
+        }
+      }
+    }
+  });
+
+  observer.observe(document.getElementById('tier-list'), {
+    childList: true,
+    subtree: true,
+  });
+});
