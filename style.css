@@ -1,190 +1,33 @@
-/* style.css */
-
+/* Style général du body */
 body {
-  margin: 0;
+  background-color: #121212;
+  color: white;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #121212;
-  color: #e0e0e0;
-}
-
-header {
+  margin: 0;
   padding: 1rem;
-  text-align: center;
-  background-color: #1f1f1f;
-  border-bottom: 2px solid #333;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
-header h1 {
-  font-size: 2.2rem;
-  color: #ff4c4c; /* rouge vif */
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.controls {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
-  background-color: #1c1c1c;
-  border-bottom: 2px solid #2a2a2a;
-}
-
-input[type="text"], input[type="file"] {
-  padding: 0.6rem 0.8rem;
-  background-color: #2a2a2a;
-  border: none;
-  border-radius: 8px;
-  color: #e0e0e0;
-  font-size: 1rem;
-  width: 250px;
-  transition: background-color 0.3s ease;
-}
-
-input[type="text"]:focus, input[type="file"]:focus {
-  background-color: #3d3d3d;
-  outline: none;
-}
-
-button {
-  padding: 0.6rem 1.4rem;
-  background-color: #444;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1.1rem;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-}
-
-button:hover {
-  background-color: #ff7f50; /* corail clair */
-  box-shadow: 0 6px 12px rgba(255,127,80,0.7);
-}
-
-#tier-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: #121212;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
+/* Container des rangs */
 .tier {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1rem;
-  border-radius: 12px;
-  gap: 1rem;
-  min-height: 120px;
-  overflow-x: auto;
-  border: 2px solid #333;
-  box-shadow: 0 0 12px rgba(0,0,0,0.7);
+  margin-bottom: 1rem;
+  gap: 10px;
 }
 
-.tier-label {
-  width: 60px;
-  font-weight: 700;
-  text-align: center;
-  color: #fff;
-  padding: 0.35rem 0.6rem;
-  border-radius: 8px;
-  margin-right: 1rem;
-  font-size: 1.4rem;
-  text-shadow: 0 0 6px rgba(0,0,0,0.8);
-  text-transform: uppercase;
-  user-select: none;
-  flex-shrink: 0;
-  letter-spacing: 1.2px;
-}
-
-/* Couleurs pour chaque rang */
-.tier.S .tier-label {
-  background-color: #e53935; /* Rouge vif */
-  box-shadow: 0 0 10px #e53935aa;
-}
-
-.tier.A .tier-label {
-  background-color: #fb8c00; /* Orange vif */
-  box-shadow: 0 0 10px #fb8c00aa;
-}
-
-.tier.B .tier-label {
-  background-color: #1e88e5; /* Bleu vif */
-  box-shadow: 0 0 10px #1e88e5aa;
-}
-
-.tier.C .tier-label {
-  background-color: #43a047; /* Vert vif */
-  box-shadow: 0 0 10px #43a047aa;
-}
-
-.tier.D .tier-label {
-  background-color: #757575; /* Gris */
-  box-shadow: 0 0 10px #757575aa;
-}
-
-.tier-content {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  flex: 1;
-  scrollbar-width: thin;
-  scrollbar-color: #666 transparent;
-}
-
-.tier-content::-webkit-scrollbar {
-  height: 8px;
-}
-
-.tier-content::-webkit-scrollbar-thumb {
-  background-color: #666;
-  border-radius: 4px;
-}
-
-.element {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #1f1f1f;
-  padding: 0.6rem;
-  border-radius: 10px;
-  border: 1px solid #333;
-  width: 90px;
-  min-width: 90px;
-  text-align: center;
-  color: #ddd;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.7);
-  transition: transform 0.2s ease;
-  user-select: none;
-}
-
-.element:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.9);
-}
-
-.element img {
-  max-width: 100%;
-  max-height: 70px;
+/* Label de rang — taille, arrondi, texte centré */
+.label {
+  padding: 5px 12px;
   border-radius: 6px;
-  object-fit: cover;
-  margin-bottom: 0.4rem;
+  font-weight: bold;
+  min-width: 30px;
+  text-align: center;
+  color: white;
 }
 
-footer {
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.9rem;
-  color: #888;
-  background-color: #1f1f1f;
-  border-top: 2px solid #2a2a2a;
-  user-select: none;
-}
+/* Couleurs selon rang */
+.tier.S .label { background-color: #e53935; } /* rouge */
+.tier.A .label { background-color: #fb8c00; } /* orange */
+.tier.B .label { background-color: #1e88e5; } /* bleu */
+.tier.C .label { background-color: #43a047; } /* vert */
+.tier.D .label { background-color: #757575; } /* gris */
