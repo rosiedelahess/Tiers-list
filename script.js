@@ -147,3 +147,15 @@ function loadTierList() {
 }
 
 loadTierList();
+const downloadButton = document.getElementById("download-btn");
+
+downloadButton.addEventListener("click", () => {
+  const tierList = document.getElementById("tier-list");
+
+  html2canvas(tierList).then((canvas) => {
+    const link = document.createElement("a");
+    link.download = "ma-tier-list.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  });
+});
