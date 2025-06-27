@@ -1,62 +1,95 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const addBtn = document.getElementById('add-element');
-  const imageInput = document.getElementById('image-upload');
-  const titleInput = document.getElementById('image-title');
-  const tierList = document.getElementById('tier-list');
-  
-  addBtn.addEventListener('click', () => {
-    const file = imageInput.files[0];
-    const title = titleInput.value.trim();
+const imageUpload = document.getElementById('image-upload');
+const imageTitle = document.getElementById('image-title');
+const addElementBtn = document.getElementById('add-element');
+const rankInputs = document.querySelectorAll('#rank-names input');
 
-    if (!file) {
-      alert("Merci de choisir une image.");
-      return;
+// Création de la zone de stockage si elle n'existe pas
+let storageArea = document.getElementById('storage-area');
+if (!storageArea) {
+  storageArea = document.createElement('section');
+  storageArea.id = 'storage-area';
+  storageArea.className = 'tier';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = 'En attente';
+  storageArea.appendChild(label);
+  const content = document.createElement('div');
+  content.className = 'tier-content';
+  storageArea.appendChild(content);
+  document.body.insertBefore(storageArea, document.getElementById('tier-list'));
+}
+
+// Mettre à jour les labels des rangs quand on modifie les inputs
+rankInputs.forEach(input => {
+  input.addEventListener('input', () => {
+    const rank = input.dataset.rank;
+    const tier = document.querySelector(`.tier[data-rank="${rank}"]`);
+    if (tier) {
+      tier.querySelector('.label').textContent = input.value;
     }
-    if (!title) {
-      alert("Merci d'entrer un nom pour l’élément.");
-      return;
-    }
+  });
+});
 
-    // Pour savoir dans quelle tier ajouter, on demande le rang aux inputs modifiables
-    // Ici, on peut demander à l’utilisateur où il veut ajouter, ou par défaut on peut choisir S (à adapter selon ta UX)
-    // Sinon, on peut prendre la valeur du premier input rang dans #rank-names, mais ça fait pas sens...
-    // Donc on peut créer un select pour le rang, mais tu n'en as pas. Je vais supposer S pour l'exemple.
+// Ajout d'un élément
+addElementBtn.addEventListener('click', () => {
+  const title = imageTitle.value.trim();
 
-    // Si tu veux, je peux te faire un select rang, sinon, par défaut on met en S
+  if (!title && !imageUpload.files.length) {
+    alert("Ajoute au moins un titre ou une image.");
+    return;
+  }
 
-    const rank = prompt("Dans quel rang voulez-vous ajouter cet élément ? (S, A, B, C, D)").toUpperCase();
+  const reader = new FileReader();
+  const element = document.createElement('div');
+  element.className = 'element';
+  element.draggable = true;
 
-    if (!['S', 'A', 'B', 'C', 'D'].includes(rank)) {
-      alert("Rang invalide. Choisissez parmi S, A, B, C ou D.");
-      return;
-    }
+  // Gestion du drag and drop
+  element.addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text/plain', '');
+    element.classList.add('dragging');
+  });
 
-    // Trouver la div tier correspondant au rang
-    const tierDiv = tierList.querySelector(`.tier[data-rank="${rank}"]`);
+  element.addEventListener('dragend', () => {
+    element.classList.remove('dragging');
+  });
 
-    if (!tierDiv) {
-      alert("Erreur : Rang introuvable.");
-      return;
-    }
+  const titleDiv = document.createElement('div');
+  titleDiv.textContent = title || '';
+  element.appendChild(titleDiv);
 
-    const reader = new FileReader();
-
-    reader.onload = function(e) {
-      // Création de l’élément visuel
-      const elemDiv = document.createElement('div');
-      elemDiv.classList.add('element');
-      elemDiv.innerHTML = `
-        <img src="${e.target.result}" alt="${title}" />
-        <div class="element-name">${title}</div>
-      `;
-
-      tierDiv.appendChild(elemDiv);
-
-      // Reset des inputs
-      imageInput.value = '';
-      titleInput.value = '';
+  // Image facultative
+  if (imageUpload.files.length > 0) {
+    const file = imageUpload.files[0];
+    reader.onload = (e) => {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      element.insertBefore(img, titleDiv);
+      addToStorage(element);
     };
-
     reader.readAsDataURL(file);
+  } else {
+    addToStorage(element);
+  }
+
+  // Réinitialiser les champs
+  imageUpload.value = '';
+  imageTitle.value = '';
+});
+
+function addToStorage(element) {
+  const content = document.querySelector('#storage-area .tier-content');
+  content.appendChild(element);
+}
+
+// Gestion du drop dans chaque tier
+document.querySelectorAll('.tier').forEach(tier => {
+  const content = tier.querySelector('.tier-content');
+  tier.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const dragging = document.querySelector('.dragging');
+    if (dragging && content) {
+      content.appendChild(dragging);
+    }
   });
 });
