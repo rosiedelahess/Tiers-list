@@ -1,118 +1,127 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Mini jeu de clic</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f0f0f0;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-
-    #jeu {
-      margin-top: 50px;
-    }
-
-    #cible {
-      width: 50px;
-      height: 50px;
-      background-color: red;
-      border-radius: 50%;
-      position: absolute;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-
-    #score {
-      font-size: 24px;
-      margin: 20px;
-    }
-
-    #startBtn, #replayBtn {
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    #startBtn:hover, #replayBtn:hover {
-      background-color: #0056b3;
-    }
-
-    #replayBtn {
-      display: none;
-      margin-top: 20px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tier List Simple</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
+    margin: 20px;
+  }
+  h1 {
+    text-align: center;
+  }
+  .tier-list {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .tier-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .tier-label {
+    width: 50px;
+    font-weight: bold;
+    text-align: center;
+    background: #333;
+    color: white;
+    padding: 10px 0;
+    margin-right: 10px;
+    user-select: none;
+  }
+  .tier-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 60px;
+    background: white;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    flex: 1;
+  }
+  .item {
+    background: #4a90e2;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: grab;
+    user-select: none;
+  }
+  .item.dragging {
+    opacity: 0.5;
+  }
+</style>
 </head>
 <body>
 
-  <h1>Mini jeu de clic</h1>
+<h1>Ma Tier List</h1>
 
-  <div id="jeu">
-    <p id="score">Score : 0</p>
-    <button id="startBtn">Commencer</button>
-    <button id="replayBtn">Rejouer</button>
-    <div id="cible" style="display: none;"></div>
+<div class="tier-list">
+
+  <div class="tier-row" data-tier="S">
+    <div class="tier-label">S</div>
+    <div class="tier-items" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
   </div>
 
-  <script>
-    const startBtn = document.getElementById('startBtn');
-    const replayBtn = document.getElementById('replayBtn');
-    const scoreDisplay = document.getElementById('score');
-    const cible = document.getElementById('cible');
+  <div class="tier-row" data-tier="A">
+    <div class="tier-label">A</div>
+    <div class="tier-items" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+  </div>
 
-    let score = 0;
-    let intervalId;
+  <div class="tier-row" data-tier="B">
+    <div class="tier-label">B</div>
+    <div class="tier-items" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+  </div>
 
-    function deplacerCible() {
-      const maxX = window.innerWidth - 50;
-      const maxY = window.innerHeight - 50;
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
-      cible.style.left = x + 'px';
-      cible.style.top = y + 'px';
+  <div class="tier-row" data-tier="C">
+    <div class="tier-label">C</div>
+    <div class="tier-items" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+  </div>
+
+  <div class="tier-row" data-tier="D">
+    <div class="tier-label">D</div>
+    <div class="tier-items" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+  </div>
+
+</div>
+
+<h2>Éléments disponibles</h2>
+<div class="tier-items" id="available-items">
+  <div class="item" draggable="true" ondragstart="drag(event)" id="item1">Personnage 1</div>
+  <div class="item" draggable="true" ondragstart="drag(event)" id="item2">Personnage 2</div>
+  <div class="item" draggable="true" ondragstart="drag(event)" id="item3">Personnage 3</div>
+  <div class="item" draggable="true" ondragstart="drag(event)" id="item4">Personnage 4</div>
+</div>
+
+<script>
+  let draggedItem = null;
+
+  function drag(ev) {
+    draggedItem = ev.target;
+    ev.dataTransfer.setData("text/plain", ev.target.id);
+    setTimeout(() => {
+      ev.target.classList.add('dragging');
+    }, 0);
+  }
+
+  function allowDrop(ev) {
+    ev.preventDefault();
+  }
+
+  function drop(ev) {
+    ev.preventDefault();
+    const id = ev.dataTransfer.getData("text/plain");
+    const item = document.getElementById(id);
+    if (item) {
+      ev.currentTarget.appendChild(item);
+      item.classList.remove('dragging');
     }
-
-    function commencerJeu() {
-      score = 0;
-      scoreDisplay.textContent = "Score : " + score;
-      cible.style.display = 'block';
-      startBtn.style.display = 'none';
-      replayBtn.style.display = 'none';
-
-      intervalId = setInterval(deplacerCible, 800);
-    }
-
-    function arreterJeu() {
-      clearInterval(intervalId);
-      cible.style.display = 'none';
-      replayBtn.style.display = 'inline-block';
-    }
-
-    cible.addEventListener('click', function () {
-      score++;
-      scoreDisplay.textContent = "Score : " + score;
-      deplacerCible();
-    });
-
-    startBtn.addEventListener('click', commencerJeu);
-    replayBtn.addEventListener('click', commencerJeu);
-
-    // Le jeu dure 30 secondes
-    setInterval(() => {
-      if (cible.style.display === 'block') {
-        arreterJeu();
-      }
-    }, 30000);
-  </script>
+  }
+</script>
 
 </body>
 </html>
