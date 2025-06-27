@@ -27,7 +27,7 @@
 
     .tier-row {
       display: flex;
-      height: 80px;
+      min-height: 80px;
       border-radius: 8px;
       overflow: hidden;
     }
@@ -46,10 +46,11 @@
       flex-grow: 1;
       background-color: #2e2e2e;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
       padding: 5px;
       gap: 10px;
-      overflow-x: auto;
+      transition: min-height 0.2s;
     }
 
     .tier-S .tier-label { background-color: #e53935; }
@@ -162,7 +163,11 @@
       ev.preventDefault();
       var data = ev.dataTransfer.getData("text");
       var item = document.getElementById(data);
-      ev.target.appendChild(item);
+      if (ev.target.classList.contains("tier-content")) {
+        ev.target.appendChild(item);
+      } else if (ev.target.closest(".tier-content")) {
+        ev.target.closest(".tier-content").appendChild(item);
+      }
     }
 
     function addItem() {
@@ -195,7 +200,6 @@
       };
       reader.readAsDataURL(file);
 
-      // Reset inputs
       document.getElementById("item-title").value = "";
       document.getElementById("item-image").value = "";
     }
