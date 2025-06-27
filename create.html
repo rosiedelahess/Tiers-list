@@ -3,124 +3,211 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Tier List Simple</title>
+<title>Tiers Liste</title>
 <style>
   body {
-    font-family: Arial, sans-serif;
-    background: #f7f7f7;
-    margin: 20px;
-  }
-  h1 {
-    text-align: center;
-  }
-  .tier-list {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  .tier-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  .tier-label {
-    width: 50px;
-    font-weight: bold;
-    text-align: center;
-    background: #333;
+    background-color: #1f1f1f;
     color: white;
-    padding: 10px 0;
-    margin-right: 10px;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    margin-top: 20px;
+  }
+
+  p {
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+
+  .tierlist {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: 1000px;
+    margin-top: 30px;
+    gap: 8px;
+  }
+
+  .tier {
+    display: flex;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+    height: 80px; /* même hauteur partout */
+  }
+
+  /* La colonne avec la lettre (S, A, etc) */
+  .tier-label {
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    padding: 0;
+    color: white;
+    font-size: 1.5em;
     user-select: none;
   }
-  .tier-items {
+
+  /* La zone où on met les items */
+  .tier-container {
+    flex-grow: 1;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    min-height: 60px;
-    background: white;
     padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    flex: 1;
+    background-color: #2e2e2e;
+    gap: 8px;
+    overflow-y: auto;
+    align-items: center;
   }
+
+  /* Les éléments déplacables */
   .item {
-    background: #4a90e2;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
+    background-color: #444;
+    border-radius: 5px;
+    padding: 4px 6px;
+    margin: 0;
     cursor: grab;
+    transition: transform 0.2s ease;
     user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60px;
+    height: 70px;
   }
+
   .item.dragging {
     opacity: 0.5;
+    transform: scale(1.1);
   }
+
+  /* Image dans les éléments */
+  .item img {
+    max-width: 50px;
+    max-height: 40px;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  .item span {
+    margin-top: 4px;
+    font-size: 0.8em;
+    text-align: center;
+    word-break: break-word;
+  }
+
+  .add-button {
+    margin-top: 20px;
+    background-color: #555;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .add-button:hover {
+    background-color: #777;
+  }
+
+  /* Couleurs des labels */
+  .tier[data-tier="S"] .tier-label { background-color: #ff4444; }
+  .tier[data-tier="A"] .tier-label { background-color: #ff9933; }
+  .tier[data-tier="B"] .tier-label { background-color: #33aaff; }
+  .tier[data-tier="C"] .tier-label { background-color: #33cc33; }
+  .tier[data-tier="D"] .tier-label { background-color: #999999; }
 </style>
 </head>
 <body>
+  <h1>Tiers Liste</h1>
+  <p>Créer et partager tes propres connaissances</p>
 
-<h1>Ma Tier List</h1>
-
-<div class="tier-list">
-
-  <div class="tier-row" data-tier="S">
-    <div class="tier-label">S</div>
-    <div class="tier-items" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+  <div class="tierlist">
+    <div class="tier" data-tier="S">
+      <div class="tier-label">S</div>
+      <div class="tier-container" data-dropzone="true"></div>
+    </div>
+    <div class="tier" data-tier="A">
+      <div class="tier-label">A</div>
+      <div class="tier-container" data-dropzone="true"></div>
+    </div>
+    <div class="tier" data-tier="B">
+      <div class="tier-label">B</div>
+      <div class="tier-container" data-dropzone="true"></div>
+    </div>
+    <div class="tier" data-tier="C">
+      <div class="tier-label">C</div>
+      <div class="tier-container" data-dropzone="true"></div>
+    </div>
+    <div class="tier" data-tier="D">
+      <div class="tier-label">D</div>
+      <div class="tier-container" data-dropzone="true"></div>
+    </div>
   </div>
 
-  <div class="tier-row" data-tier="A">
-    <div class="tier-label">A</div>
-    <div class="tier-items" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
-  </div>
-
-  <div class="tier-row" data-tier="B">
-    <div class="tier-label">B</div>
-    <div class="tier-items" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
-  </div>
-
-  <div class="tier-row" data-tier="C">
-    <div class="tier-label">C</div>
-    <div class="tier-items" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
-  </div>
-
-  <div class="tier-row" data-tier="D">
-    <div class="tier-label">D</div>
-    <div class="tier-items" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
-  </div>
-
-</div>
-
-<h2>Éléments disponibles</h2>
-<div class="tier-items" id="available-items">
-  <div class="item" draggable="true" ondragstart="drag(event)" id="item1">Personnage 1</div>
-  <div class="item" draggable="true" ondragstart="drag(event)" id="item2">Personnage 2</div>
-  <div class="item" draggable="true" ondragstart="drag(event)" id="item3">Personnage 3</div>
-  <div class="item" draggable="true" ondragstart="drag(event)" id="item4">Personnage 4</div>
-</div>
+  <button class="add-button" onclick="addItem()">Ajouter un élément</button>
 
 <script>
   let draggedItem = null;
 
-  function drag(ev) {
-    draggedItem = ev.target;
-    ev.dataTransfer.setData("text/plain", ev.target.id);
-    setTimeout(() => {
-      ev.target.classList.add('dragging');
-    }, 0);
-  }
+  // Fonction pour ajouter un nouvel élément avec image + nom
+  function addItem() {
+    const name = prompt("Nom de l'élément à classer ?");
+    if (!name) return;
 
-  function allowDrop(ev) {
-    ev.preventDefault();
-  }
+    const imageUrl = prompt("URL de l'image de l'élément ? (Laisser vide pour aucune image)");
 
-  function drop(ev) {
-    ev.preventDefault();
-    const id = ev.dataTransfer.getData("text/plain");
-    const item = document.getElementById(id);
-    if (item) {
-      ev.currentTarget.appendChild(item);
-      item.classList.remove('dragging');
+    const newItem = document.createElement('div');
+    newItem.className = 'item';
+    newItem.setAttribute('draggable', true);
+
+    if (imageUrl) {
+      const img = document.createElement('img');
+      img.src = imageUrl;
+      img.alt = name;
+      newItem.appendChild(img);
     }
+
+    const span = document.createElement('span');
+    span.textContent = name;
+    newItem.appendChild(span);
+
+    addDragEvents(newItem);
+
+    // Par défaut, on place l'item dans la colonne D (la plus basse)
+    document.querySelector('.tier[data-tier="D"] .tier-container').appendChild(newItem);
   }
+
+  // Ajoute les événements de drag & drop sur un élément
+  function addDragEvents(item) {
+    item.addEventListener('dragstart', (e) => {
+      draggedItem = item;
+      item.classList.add('dragging');
+    });
+
+    item.addEventListener('dragend', () => {
+      draggedItem = null;
+      item.classList.remove('dragging');
+    });
+  }
+
+  // Gestion des zones de drop
+  document.querySelectorAll('[data-dropzone="true"]').forEach(zone => {
+    zone.addEventListener('dragover', e => e.preventDefault());
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      if (draggedItem) {
+        zone.appendChild(draggedItem);
+      }
+    });
+  });
 </script>
 
 </body>
