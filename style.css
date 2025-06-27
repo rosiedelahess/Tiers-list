@@ -1,7 +1,8 @@
 body {
   font-family: sans-serif;
   padding: 20px;
-  background: #f0f0f0;
+  background: #121212;  /* Fond noir */
+  color: #fff;  /* Texte en blanc */
 }
 
 #controls, #rank-names {
@@ -11,8 +12,8 @@ body {
 .tier {
   margin: 10px 0;
   padding: 10px;
-  background: white;
-  border: 2px solid #ccc;
+  background: #1f1f1f;  /* Fond sombre pour chaque rang */
+  border: 2px solid #333;  /* Bordure gris foncé */
 }
 
 .label {
@@ -29,12 +30,13 @@ body {
 }
 
 .tier-item {
-  background: #fff;
-  border: 1px solid #aaa;
+  background: #2c2c2c;  /* Fond encore plus foncé pour les éléments */
+  border: 1px solid #555;  /* Bordure plus claire */
   padding: 5px;
   text-align: center;
   width: 100px;
   position: relative;
+  color: #fff;  /* Texte en blanc */
 }
 
 .tier-item img {
@@ -50,4 +52,22 @@ body {
   color: white;
   border: none;
   cursor: pointer;
+}
+
+#storage-area {
+  background: #333;  /* Fond de stockage sombre */
+  border: 2px dashed #555;  /* Bordure en pointillés */
+}
+
+button {
+  background-color: #444;  /* Fond des boutons en gris foncé */
+  color: #fff;  /* Texte des boutons en blanc */
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #666;  /* Effet hover pour les boutons */
 }
