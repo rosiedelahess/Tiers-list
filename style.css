@@ -1,187 +1,40 @@
-/* Style global du body */
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #121212;
-  color: #e0e0e0;
-}
+/* Style global du body */ body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; }
 
-/* Header */
-header {
-  padding: 1rem;
-  text-align: center;
-  background-color: #1f1f1f;
-  border-bottom: 2px solid #333;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
+/* En-tête */ header { padding: 1rem; text-align: center; background-color: #1f1f1f; border-bottom: 2px solid #333; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); }
 
-header h1 {
-  font-size: 2rem;
-  color: #ff6f61;
-}
+header h1 { font-size: 2rem; color: #ff6f61; }
 
-/* Section contrôles */
-.settings, .upload, .download {
-  padding: 1.5rem;
-  background-color: #1c1c1c;
-  border-bottom: 2px solid #2a2a2a;
-  margin-bottom: 1rem;
-  border-radius: 8px;
-}
+/* Sections de contrôle */ .settings, .upload, .download { padding: 1.5rem; background-color: #1c1c1c; border-bottom: 2px solid #2a2a2a; margin-bottom: 1rem; border-radius: 8px; }
 
-/* Inputs */
-input[type="text"], input[type="file"] {
-  padding: 0.5rem;
-  background-color: #2a2a2a;
-  border: none;
-  border-radius: 6px;
-  color: #e0e0e0;
-  width: 200px;
-  margin-right: 0.7rem;
-}
+/* Champs de formulaire */ input[type="text"], input[type="file"] { padding: 0.5rem; background-color: #2a2a2a; border: none; border-radius: 6px; color: #e0e0e0; width: 200px; margin-right: 0.7rem; }
 
-input[type="text"]:focus {
-  outline: 2px solid #ff6f61;
-}
+input[type="text"]:focus { outline: 2px solid #ff6f61; }
 
-/* Boutons */
-button {
-  padding: 0.5rem 1rem;
-  background-color: #444;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+/* Boutons */ button { padding: 0.5rem 1rem; background-color: #444; color: #fff; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.3s ease; }
 
-button:hover {
-  background-color: #ff6f61;
-  color: #121212;
-  font-weight: bold;
-}
+button:hover { background-color: #ff6f61; color: #121212; font-weight: bold; }
 
-/* Container principal de la tier list */
-.tier-list {
-  padding: 1rem;
-  background-color: #121212;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+/* Conteneur principal de la tier list */ .tier-list { padding: 1rem; background-color: #121212; display: flex; flex-direction: column; gap: 1rem; }
 
-/* Chaque tier */
-.tier {
-  display: flex;
-  align-items: center;
-  padding: 0.6rem;
-  border-radius: 8px;
-  gap: 1rem;
-  min-height: 110px;
-  overflow-x: auto;
-  border: 2px solid #333;
-  background-color: #1f1f1f;
-}
+/* Chaque rang */ .tier { display: flex; align-items: center; padding: 0.6rem; border-radius: 8px; gap: 1rem; min-height: 110px; overflow-x: auto; border: 2px solid #333; background-color: #1f1f1f; }
 
-/* Label de rang avec couleurs distinctes */
-.label {
-  min-width: 40px;
-  font-weight: 700;
-  font-size: 1.3rem;
-  padding: 8px 14px;
-  border-radius: 10px;
-  text-align: center;
-  color: white;
-  user-select: none;
-  flex-shrink: 0;
-  box-shadow: 0 0 8px rgba(0,0,0,0.5);
-}
+/* Étiquette de rang avec couleurs spécifiques */ .label { min-width: 40px; font-weight: 700; font-size: 1.3rem; padding: 8px 14px; border-radius: 10px; text-align: center; color: white; user-select: none; flex-shrink: 0; box-shadow: 0 0 8px rgba(0,0,0,0.5); }
 
-/* Couleurs précises par rang */
-.tier.S .label { background-color: #e53935; box-shadow: 0 0 15px #e53935; }  /* Rouge vif */
-.tier.A .label { background-color: #fb8c00; box-shadow: 0 0 15px #fb8c00; }  /* Orange chaud */
-.tier.B .label { background-color: #1e88e5; box-shadow: 0 0 15px #1e88e5; }  /* Bleu dynamique */
-.tier.C .label { background-color: #43a047; box-shadow: 0 0 15px #43a047; }  /* Vert frais */
-.tier.D .label { background-color: #757575; box-shadow: 0 0 15px #757575; }  /* Gris doux */
+/* Couleurs des étiquettes */ .tier.S .label { background-color: #e53935; box-shadow: 0 0 15px #e53935; } .tier.A .label { background-color: #fb8c00; box-shadow: 0 0 15px #fb8c00; } .tier.B .label { background-color: #1e88e5; box-shadow: 0 0 15px #1e88e5; } .tier.C .label { background-color: #43a047; box-shadow: 0 0 15px #43a047; } .tier.D .label { background-color: #757575; box-shadow: 0 0 15px #757575; }
 
-/* Contenu des éléments dans une tier */
-.tier-content {
-  display: flex;
-  gap: 0.8rem;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  flex: 1;
-}
+/* Contenu des éléments dans chaque rang */ .tier-content { display: flex; gap: 0.8rem; flex-wrap: nowrap; overflow-x: auto; flex: 1; }
 
-/* Chaque élément */
-.element {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #292929;
-  padding: 0.6rem;
-  border-radius: 8px;
-  border: 1px solid #444;
-  width: 90px;
-  min-width: 90px;
-  text-align: center;
-  color: #ddd;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.6);
-  transition: transform 0.2s ease;
-  cursor: default;
-}
+/* Éléments */ .element { display: flex; flex-direction: column; align-items: center; background-color: #292929; padding: 0.6rem; border-radius: 8px; border: 1px solid #444; width: 90px; min-width: 90px; text-align: center; color: #ddd; box-shadow: 0 3px 8px rgba(0,0,0,0.6); transition: transform 0.2s ease; cursor: default; }
 
-.element:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 12px rgba(255, 111, 97, 0.8);
-}
+.element:hover { transform: scale(1.05); box-shadow: 0 5px 12px rgba(255, 111, 97, 0.8); }
 
-/* Image dans l'élément */
-.element img {
-  max-width: 100%;
-  max-height: 60px;
-  border-radius: 6px;
-  object-fit: contain;
-  margin-bottom: 0.4rem;
-}
+/* Image dans les éléments */ .element img { max-width: 100%; max-height: 60px; border-radius: 6px; object-fit: contain; margin-bottom: 0.4rem; }
 
-/* Footer */
-footer {
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.9rem;
-  color: #888;
-  background-color: #1f1f1f;
-  border-top: 2px solid #2a2a2a;
-}
-.tier-item {
-  position: relative;
-  display: inline-block;
-  margin: 10px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  background-color: white;
-  border-radius: 6px;
-  max-width: 100px;
-  text-align: center;
-}
+/* Pied de page */ footer { text-align: center; padding: 1rem; font-size: 0.9rem; color: #888; background-color: #1f1f1f; border-top: 2px solid #2a2a2a; }
 
-.tier-item img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 4px;
-}
+/* Bouton de suppression (si utilisé) */ .delete-btn { position: absolute; top: -8px; right: -8px; background-color: #ff4d4d; border: none; border-radius: 50%; color: white; font-size: 12px; width: 20px; height: 20px; cursor: pointer; }
 
-.delete-btn {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background-color: #ff4d4d;
-  border: none;
-  border-radius: 50%;
-  color: white;
-  font-size: 12px;
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
+/* Élément de tier (ancienne version potentiellement obsolète) */ .tier-item { position: relative; display: inline-block; margin: 10px; padding: 5px; border: 1px solid #ccc; background-color: white; border-radius: 6px; max-width: 100px; text-align: center; }
+
+.tier-item img { max-width: 100%; height: auto; border-radius: 4px; }
+
