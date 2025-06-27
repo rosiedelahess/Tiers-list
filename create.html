@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Créer ta tier list</title>
+  <title>CRLIS</title>
   <style>
     body {
       background-color: #1f1f1f;
@@ -17,47 +17,19 @@
   margin-top: 20px;
 }
 
-.controls {
-  margin: 20px;
-  display: flex;
-  gap: 10px;
-}
-
-input[type="text"] {
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  outline: none;
-}
-
-button {
-  background-color: #555;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-button:hover {
-  background-color: #777;
-}
-
 .tierlist {
   display: flex;
   flex-direction: column;
   width: 90%;
   max-width: 1000px;
-  margin-top: 10px;
+  margin-top: 30px;
 }
 
 .tier {
   display: flex;
-  align-items: center;
   margin: 4px 0;
   border-radius: 5px;
   overflow: hidden;
-  transition: all 0.2s ease-in-out;
 }
 
 .tier-label {
@@ -66,6 +38,9 @@ button:hover {
   font-weight: bold;
   padding: 10px;
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tier-container {
@@ -92,21 +67,46 @@ button:hover {
   transform: scale(1.1);
 }
 
-.tier[data-tier="S"] .tier-label { background-color: #ff4444; }
-.tier[data-tier="A"] .tier-label { background-color: #ff9933; }
-.tier[data-tier="B"] .tier-label { background-color: #33aaff; }
-.tier[data-tier="C"] .tier-label { background-color: #33cc33; }
-.tier[data-tier="D"] .tier-label { background-color: #999999; }
+.add-button, .save-button {
+  margin-top: 20px;
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.add-button:hover, .save-button:hover {
+  background-color: #777;
+}
+
+.tier[data-tier="S"] {
+  background-color: #ff4444;
+}
+.tier[data-tier="A"] {
+  background-color: #ff9933;
+}
+.tier[data-tier="B"] {
+  background-color: #33aaff;
+}
+.tier[data-tier="C"] {
+  background-color: #33cc33;
+}
+.tier[data-tier="D"] {
+  background-color: #999999;
+}
+
+.tier[data-tier] .tier-label {
+  background-color: rgba(0,0,0,0.3);
+}
 
   </style>
 </head>
 <body>
-  <h1>CRDIS</h1>
-  <p>Crée et partage tes propres classements</p>  <div class="controls">
-    <input type="text" id="newItemText" placeholder="Ajouter un élément">
-    <button onclick="addItem()">Ajouter</button>
-    <button onclick="saveTierlist()">Enregistrer ma tier list</button>
-  </div>  <div class="tierlist">
+  <h1>CRLIS</h1>
+  <p>Créer et partager tes propres connaissances</p>  <div class="tierlist">
     <div class="tier" data-tier="S">
       <div class="tier-label">S</div>
       <div class="tier-container" data-dropzone="true"></div>
@@ -127,25 +127,25 @@ button:hover {
       <div class="tier-label">D</div>
       <div class="tier-container" data-dropzone="true"></div>
     </div>
+  </div>  <div>
+    <button class="add-button" onclick="addItem()">Ajouter un élément</button>
+    <button class="save-button" onclick="saveTierlist()">Enregistrer ma tier list</button>
   </div>  <script>
     let draggedItem = null;
 
     function addItem() {
-      const text = document.getElementById('newItemText').value.trim();
-      if (!text) return;
-
-      const item = document.createElement('div');
-      item.className = 'item';
-      item.textContent = text;
-      item.setAttribute('draggable', true);
-      addDragEvents(item);
-
-      document.querySelector('[data-tier="D"] .tier-container').appendChild(item);
-      document.getElementById('newItemText').value = '';
+      const newItem = document.createElement('div');
+      newItem.className = 'item';
+      const itemText = prompt("Quel est le nom de ton élément à classer ?");
+      if (!itemText) return;
+      newItem.textContent = itemText;
+      newItem.setAttribute('draggable', true);
+      addDragEvents(newItem);
+      document.querySelector('.tierlist').appendChild(newItem);
     }
 
     function addDragEvents(item) {
-      item.addEventListener('dragstart', () => {
+      item.addEventListener('dragstart', (e) => {
         draggedItem = item;
         item.classList.add('dragging');
       });
@@ -156,13 +156,14 @@ button:hover {
       });
     }
 
-    document.querySelectorAll('[data-dropzone="true"]').forEach(container => {
-      container.addEventListener('dragover', e => e.preventDefault());
-      container.addEventListener('drop', e => {
+    document.querySelectorAll('[data-dropzone="true"]').forEach(zone => {
+      zone.addEventListener('dragover', (e) => {
         e.preventDefault();
+      });
+
+      zone.addEventListener('drop', (e) => {
         if (draggedItem) {
-          void draggedItem.offsetWidth;
-          container.appendChild(draggedItem);
+          zone.appendChild(draggedItem);
         }
       });
     });
@@ -171,17 +172,14 @@ button:hover {
       const tiers = {};
       document.querySelectorAll('.tier').forEach(tier => {
         const label = tier.dataset.tier;
-        const items = Array.from(tier.querySelectorAll('.item')).map(item => item.textContent);
+        const items = [...tier.querySelectorAll('.item')].map(i => i.textContent);
         tiers[label] = items;
       });
-
       const blob = new Blob([JSON.stringify(tiers, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url;
-      a.download = 'ma-tierlist.json';
+      a.href = URL.createObjectURL(blob);
+      a.download = 'ma_tierlist.json';
       a.click();
-      URL.revokeObjectURL(url);
     }
   </script></body>
 </html>
