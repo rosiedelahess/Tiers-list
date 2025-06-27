@@ -57,7 +57,7 @@
     }
   </style>
 </head>
-<body>
+  <body>
   <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" role="img">
     <circle cx="32" cy="32" r="30" stroke="white" stroke-width="2" fill="none"/>
     <path d="M16 44 L32 20 L48 44 Z" stroke="white" stroke-width="2" fill="none"/>
@@ -66,6 +66,43 @@
   <h1>Tierlist</h1>
   <p>Crée et partage tes propres classements</p>
 
+  <!-- Le bouton -->
+  <button id="createBtn">Créer ma tier list</button>
+
   <footer>© 2025 Tierlist, by Toi</footer>
-</body>
+
+  <script>
+    // Quand on clique sur le bouton, pour l'instant ça affiche un message
+    document.getElementById('createBtn').addEventListener('click', () => {
+      alert('Cool, tu veux créer ta propre tier list ! Bientôt cette page te permettra de commencer.');
+      // Plus tard, tu pourras rediriger vers une page de création
+      // window.location.href = 'create.html';
+    });
+  </script>
+
+  <style>
+    /* Style du bouton */
+    #createBtn {
+      margin-top: 2rem;
+      padding: 0.75rem 2rem;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #4a90e2;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    #createBtn:hover {
+      background-color: #357abd;
+    }
+  </style>
+  </body>
+  </svg>
+
+  <h1>Tierlist</h1>
+  <p>Crée et partage tes propres classements</p>
+
+  <footer>© 2025 Tierlist, by Toi</footer>
 </html>
