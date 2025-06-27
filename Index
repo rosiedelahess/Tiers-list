@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ma tier list</title>
+    <style>
+      body { font-family: sans-serif; padding: 20px; }
+      .tier { margin-bottom: 20px; }
+      .tier h2 { background: #eee; padding: 5px; }
+      .items { border: 1px solid #ccc; min-height: 40px; padding: 10px; }
+    </style>
+  </head>
+  <body>
+    <h1>Ma Tier List de Purées</h1>
+
+    <div class="tier"><h2>S Tier</h2><div class="items" id="tier-s"></div></div>
+    <div class="tier"><h2>A Tier</h2><div class="items" id="tier-a"></div></div>
+    <div class="tier"><h2>B Tier</h2><div class="items" id="tier-b"></div></div>
+
+    <script>
+      const items = ["Purée de patate douce", "Purée de céleri", "Purée de carottes"];
+      const s = document.getElementById("tier-s");
+      items.forEach(item => {
+        const div = document.createElement("div");
+        div.textContent = item;
+        s.appendChild(div);
+      });
+    </script>
+  </body>
+</html>
