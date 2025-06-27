@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Créer ma Tier List</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Ma Tier List Personnalisée</h1>
+  </header>
+
+  <section class="settings">
+    <h2>Rangs personnalisables</h2>
+    <div id="rank-names">
+      <input type="text" value="S" data-rank="S" />
+      <input type="text" value="A" data-rank="A" />
+      <input type="text" value="B" data-rank="B" />
+      <input type="text" value="C" data-rank="C" />
+      <input type="text" value="D" data-rank="D" />
+    </div>
+  </section>
+
+  <section class="upload">
+    <h2>Ajouter un élément</h2>
+    <input type="file" id="image-upload" accept="image/*" />
+    <input type="text" id="image-title" placeholder="Nom de l’élément" />
+    <button id="add-element">Ajouter</button>
+  </section>
+
+  <section id="tier-list" class="tier-list">
+    <div class="tier" data-rank="S"><span class="label">S</span></div>
+    <div class="tier" data-rank="A"><span class="label">A</span></div>
+    <div class="tier" data-rank="B"><span class="label">B</span></div>
+    <div class="tier" data-rank="C"><span class="label">C</span></div>
+    <div class="tier" data-rank="D"><span class="label">D</span></div>
+  </section>
+
+  <section class="download">
+    <button id="download-btn">Télécharger la Tier List</button>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
