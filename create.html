@@ -1,457 +1,118 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Tiers Liste</title>
-<style>
-  body {
-    background-color: #1f1f1f;
-    color: white;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  <meta charset="UTF-8">
+  <title>Mini jeu de clic</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f0f0;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
 
-  h1 {
-    margin-top: 20px;
-  }
+    #jeu {
+      margin-top: 50px;
+    }
 
-  p {
-    margin-top: 0;
-    margin-bottom: 20px;
-  }
+    #cible {
+      width: 50px;
+      height: 50px;
+      background-color: red;
+      border-radius: 50%;
+      position: absolute;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
 
-  .tierlist {
-    display: flex;
-    flex-direction: column;
-    width: 90%;
-    max-width: 1000px;
-    margin-top: 30px;
-    gap: 8px;
-  }
+    #score {
+      font-size: 24px;
+      margin: 20px;
+    }
 
-  .tier {
-    display: flex;
-    border-radius: 5px;
-    overflow: hidden;
-    transition: all 0.2s ease-in-out;
-    height: 80px; /* même hauteur partout */
-  }
+    #startBtn, #replayBtn {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
 
-  /* La colonne avec la lettre (S, A, etc) */
-  .tier-label {
-    width: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    padding: 0;
-    color: white;
-    font-size: 1.5em;
-    user-select: none;
-  }
+    #startBtn:hover, #replayBtn:hover {
+      background-color: #0056b3;
+    }
 
-  /* La zone où on met les items */
-  .tier-container {
-    flex-grow: 1;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 10px;
-    background-color: #2e2e2e;
-    gap: 8px;
-    overflow-y: auto;
-    align-items: center;
-  }
-
-  /* Les éléments déplacables */
-  .item {
-    background-color: #444;
-    border-radius: 5px;
-    padding: 4px 6px;
-    margin: 0;
-    cursor: grab;
-    transition: transform 0.2s ease;
-    user-select: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 60px;
-    height: 70px;
-  }
-
-  .item.dragging {
-    opacity: 0.5;
-    transform: scale(1.1);
-  }
-
-  /* Image dans les éléments */
-  .item img {
-    max-width: 50px;
-    max-height: 40px;
-    object-fit: contain;
-    border-radius: 4px;
-  }
-
-  .item span {
-    margin-top: 4px;
-    font-size: 0.8em;
-    text-align: center;
-    word-break: break-word;
-  }
-
-  .add-button {
-    margin-top: 20px;
-    background-color: #555;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-
-  .add-button:hover {
-    background-color: #777;
-  }
-
-  /* Couleurs des labels */
-  .tier[data-tier="S"] .tier-label { background-color: #ff4444; }
-  .tier[data-tier="A"] .tier-label { background-color: #ff9933; }
-  .tier[data-tier="B"] .tier-label { background-color: #33aaff; }
-  .tier[data-tier="C"] .tier-label { background-color: #33cc33; }
-  .tier[data-tier="D"] .tier-label { background-color: #999999; }
-</style>
+    #replayBtn {
+      display: none;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Tiers Liste</h1>
-  <p>Créer et partager tes propres connaissances</p>
 
-  <div class="tierlist">
-    <div class="tier" data-tier="S">
-      <div class="tier-label">S</div>
-      <div class="tier-container" data-dropzone="true"></div>
-    </div>
-    <div class="tier" data-tier="A">
-      <div class="tier-label">A</div>
-      <div class="tier-container" data-dropzone="true"></div>
-    </div>
-    <div class="tier" data-tier="B">
-      <div class="tier-label">B</div>
-      <div class="tier-container" data-dropzone="true"></div>
-    </div>
-    <div class="tier" data-tier="C">
-      <div class="tier-label">C</div>
-      <div class="tier-container" data-dropzone="true"></div>
-    </div>
-    <div class="tier" data-tier="D">
-      <div class="tier-label">D</div>
-      <div class="tier-container" data-dropzone="true"></div>
-    </div>
+  <h1>Mini jeu de clic</h1>
+
+  <div id="jeu">
+    <p id="score">Score : 0</p>
+    <button id="startBtn">Commencer</button>
+    <button id="replayBtn">Rejouer</button>
+    <div id="cible" style="display: none;"></div>
   </div>
 
-  <button class="add-button" onclick="addItem()">Ajouter un élément</button>
-
-<script>
-  let draggedItem = null;
-
-  // Fonction pour ajouter un nouvel élément avec image + nom
-  function addItem() {
-    const name = prompt("Nom de l'élément à classer ?");
-    if (!name) return;
-
-    const imageUrl = prompt("URL de l'image de l'élément ? (Laisser vide pour aucune image)");
-
-    const newItem = document.createElement('div');
-    newItem.className = 'item';
-    newItem.setAttribute('draggable', true);
-
-    if (imageUrl) {
-      const img = document.createElement('img');
-      img.src = imageUrl;
-      img.alt = name;
-      newItem.appendChild(img);
-    }
-
-    const span = document.createElement('span');
-    span.textContent = name;
-    newItem.appendChild(span);
-
-    addDragEvents(newItem);
-
-    // Par défaut, on place l'item dans la colonne D (la plus basse)
-    document.querySelector('.tier[data-tier="D"] .tier-container').appendChild(newItem);
-  }
-
-  // Ajoute les événements de drag & drop sur un élément
-  function addDragEvents(item) {
-    item.addEventListener('dragstart', (e) => {
-      draggedItem = item;
-      item.classList.add('dragging');
-    });
-
-    item.addEventListener('dragend', () => {
-      draggedItem = null;
-      item.classList.remove('dragging');
-    });
-  }
-
-  // Gestion des zones de drop
-  document.querySelectorAll('[data-dropzone="true"]').forEach(zone => {
-    zone.addEventListener('dragover', e => e.preventDefault());
-    zone.addEventListener('drop', e => {
-      e.preventDefault();
-      if (draggedItem) {
-        zone.appendChild(draggedItem);
-      }
-    });
-  });
-</script>
-<!-- Ajoute ce input dans le body, juste avant le bouton -->
-<input type="file" id="imagePicker" accept="image/*" style="display:none" />
-
-<script>
-  const imagePicker = document.getElementById('imagePicker');
-  let selectedImageDataUrl = null;
-
-  function addItem() {
-    // Ouvre le sélecteur d'image
-    selectedImageDataUrl = null;
-    imagePicker.value = null; // reset pour réouvrir à chaque fois
-    imagePicker.click();
-
-    // Quand une image est choisie
-    imagePicker.onchange = () => {
-      const file = imagePicker.files[0];
-      if (!file) return;
-
-      // Lis le fichier en data URL
-      const reader = new FileReader();
-      reader.onload = e => {
-        selectedImageDataUrl = e.target.result;
-
-        // Demande le nom seulement APRES avoir sélectionné l'image
-        const name = prompt("Nom de l'élément à classer ?");
-        if (!name) return;
-
-        const newItem = document.createElement('div');
-        newItem.className = 'item';
-        newItem.setAttribute('draggable', true);
-
-        if (selectedImageDataUrl) {
-          const img = document.createElement('img');
-          img.src = selectedImageDataUrl;
-          img.alt = name;
-          newItem.appendChild(img);
-        }
-
-        const span = document.createElement('span');
-        span.textContent = name;
-        newItem.appendChild(span);
-
-        addDragEvents(newItem);
-
-        // Place dans la colonne D par défaut
-        document.querySelector('.tier[data-tier="D"] .tier-container').appendChild(newItem);
-      };
-      reader.readAsDataURL(file);
-    };
-  }
-</script>
   <script>
-  let draggedItem = null;
+    const startBtn = document.getElementById('startBtn');
+    const replayBtn = document.getElementById('replayBtn');
+    const scoreDisplay = document.getElementById('score');
+    const cible = document.getElementById('cible');
 
-  // Fonction pour ajouter les événements drag & drop à un item
-  function addDragEvents(item) {
-    item.addEventListener('dragstart', (e) => {
-      draggedItem = item;
-      item.classList.add('dragging');
+    let score = 0;
+    let intervalId;
+
+    function deplacerCible() {
+      const maxX = window.innerWidth - 50;
+      const maxY = window.innerHeight - 50;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+      cible.style.left = x + 'px';
+      cible.style.top = y + 'px';
+    }
+
+    function commencerJeu() {
+      score = 0;
+      scoreDisplay.textContent = "Score : " + score;
+      cible.style.display = 'block';
+      startBtn.style.display = 'none';
+      replayBtn.style.display = 'none';
+
+      intervalId = setInterval(deplacerCible, 800);
+    }
+
+    function arreterJeu() {
+      clearInterval(intervalId);
+      cible.style.display = 'none';
+      replayBtn.style.display = 'inline-block';
+    }
+
+    cible.addEventListener('click', function () {
+      score++;
+      scoreDisplay.textContent = "Score : " + score;
+      deplacerCible();
     });
 
-    item.addEventListener('dragend', () => {
-      draggedItem = null;
-      item.classList.remove('dragging');
-      saveTierlist(); // Sauvegarde à chaque fin de déplacement
-    });
-  }
+    startBtn.addEventListener('click', commencerJeu);
+    replayBtn.addEventListener('click', commencerJeu);
 
-  // Ajout des événements drag & drop aux éléments existants au chargement
-  document.querySelectorAll('.item').forEach(addDragEvents);
-
-  // Ajout des zones de drop
-  document.querySelectorAll('[data-dropzone="true"]').forEach(zone => {
-    zone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-    });
-
-    zone.addEventListener('drop', (e) => {
-      if (draggedItem) {
-        zone.appendChild(draggedItem);
-        saveTierlist(); // Sauvegarde après déplacement
+    // Le jeu dure 30 secondes
+    setInterval(() => {
+      if (cible.style.display === 'block') {
+        arreterJeu();
       }
-    });
-  });
-
-  // Ajouter un nouvel élément avec image
-  function addItem() {
-    const itemName = prompt("Quel est le nom de ton élément à classer ?");
-    if (!itemName) return;
-
-    const imageUrl = prompt("Colle ici l'URL de l'image de ton élément (optionnel) :");
-
-    const newItem = document.createElement('div');
-    newItem.className = 'item';
-    newItem.setAttribute('draggable', true);
-
-    if(imageUrl) {
-      const img = document.createElement('img');
-      img.src = imageUrl;
-      img.alt = itemName;
-      img.style.height = '50px';
-      img.style.marginRight = '8px';
-      img.style.verticalAlign = 'middle';
-      newItem.appendChild(img);
-    }
-
-    const textNode = document.createTextNode(itemName);
-    newItem.appendChild(textNode);
-
-    addDragEvents(newItem);
-
-    // Ajoute par défaut dans la colonne D
-    const colD = document.querySelector('.tier[data-tier="D"] .tier-container');
-    colD.appendChild(newItem);
-
-    saveTierlist();
-  }
-
-  // Double clic pour modifier le label des colonnes
-  document.querySelectorAll('.tier-label').forEach(label => {
-    label.addEventListener('dblclick', () => {
-      const currentText = label.textContent;
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.value = currentText;
-      input.style.width = '40px';
-      input.style.fontWeight = 'bold';
-      input.style.textAlign = 'center';
-
-      label.textContent = '';
-      label.appendChild(input);
-      input.focus();
-
-      input.addEventListener('blur', () => {
-        let newText = input.value.trim();
-        if(newText === '') newText = currentText;
-        label.textContent = newText;
-        saveTierlist();
-      });
-
-      input.addEventListener('keydown', (e) => {
-        if(e.key === 'Enter') {
-          input.blur();
-        }
-      });
-    });
-  });
-
-  // Sauvegarde la tierlist dans le localStorage
-  function saveTierlist() {
-    const tiers = {};
-    document.querySelectorAll('.tier').forEach(tier => {
-      const tierName = tier.querySelector('.tier-label').textContent;
-      const items = [];
-      tier.querySelectorAll('.item').forEach(item => {
-        let imgSrc = null;
-        const img = item.querySelector('img');
-        if(img) imgSrc = img.src;
-        const text = item.textContent;
-        items.push({ text, imgSrc });
-      });
-      tiers[tier.getAttribute('data-tier')] = { name: tierName, items };
-    });
-    localStorage.setItem('myTierlist', JSON.stringify(tiers));
-  }
-
-  // Charge la tierlist depuis le localStorage
-  function loadTierlist() {
-    const saved = localStorage.getItem('myTierlist');
-    if(!saved) return;
-    const tiers = JSON.parse(saved);
-
-    for(const tierKey in tiers) {
-      const tier = document.querySelector(`.tier[data-tier="${tierKey}"]`);
-      if(!tier) continue;
-
-      // Met à jour le nom de la colonne (label)
-      const label = tier.querySelector('.tier-label');
-      label.textContent = tiers[tierKey].name;
-
-      // Supprime les items actuels
-      const container = tier.querySelector('.tier-container');
-      container.innerHTML = '';
-
-      // Recrée les items
-      tiers[tierKey].items.forEach(({ text, imgSrc }) => {
-        const item = document.createElement('div');
-        item.className = 'item';
-        item.setAttribute('draggable', true);
-
-        if(imgSrc) {
-          const img = document.createElement('img');
-          img.src = imgSrc;
-          img.alt = text;
-          img.style.height = '50px';
-          img.style.marginRight = '8px';
-          img.style.verticalAlign = 'middle';
-          item.appendChild(img);
-        }
-
-        const textNode = document.createTextNode(text);
-        item.appendChild(textNode);
-
-        addDragEvents(item);
-        container.appendChild(item);
-      });
-    }
-
-    // Réassocier l'événement de double clic pour les labels recréés (au cas où)
-    document.querySelectorAll('.tier-label').forEach(label => {
-      label.addEventListener('dblclick', () => {
-        const currentText = label.textContent;
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.value = currentText;
-        input.style.width = '40px';
-        input.style.fontWeight = 'bold';
-        input.style.textAlign = 'center';
-
-        label.textContent = '';
-        label.appendChild(input);
-        input.focus();
-
-        input.addEventListener('blur', () => {
-          let newText = input.value.trim();
-          if(newText === '') newText = currentText;
-          label.textContent = newText;
-          saveTierlist();
-        });
-
-        input.addEventListener('keydown', (e) => {
-          if(e.key === 'Enter') {
-            input.blur();
-          }
-        });
-      });
-    });
-  }
-
-  // Au chargement de la page, charge la tierlist sauvegardée
-  window.addEventListener('DOMContentLoaded', () => {
-    loadTierlist();
-  });
+    }, 30000);
   </script>
+
 </body>
 </html>
