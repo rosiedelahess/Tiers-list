@@ -260,5 +260,198 @@
     };
   }
 </script>
+  <script>
+  let draggedItem = null;
+
+  // Fonction pour ajouter les événements drag & drop à un item
+  function addDragEvents(item) {
+    item.addEventListener('dragstart', (e) => {
+      draggedItem = item;
+      item.classList.add('dragging');
+    });
+
+    item.addEventListener('dragend', () => {
+      draggedItem = null;
+      item.classList.remove('dragging');
+      saveTierlist(); // Sauvegarde à chaque fin de déplacement
+    });
+  }
+
+  // Ajout des événements drag & drop aux éléments existants au chargement
+  document.querySelectorAll('.item').forEach(addDragEvents);
+
+  // Ajout des zones de drop
+  document.querySelectorAll('[data-dropzone="true"]').forEach(zone => {
+    zone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+
+    zone.addEventListener('drop', (e) => {
+      if (draggedItem) {
+        zone.appendChild(draggedItem);
+        saveTierlist(); // Sauvegarde après déplacement
+      }
+    });
+  });
+
+  // Ajouter un nouvel élément avec image
+  function addItem() {
+    const itemName = prompt("Quel est le nom de ton élément à classer ?");
+    if (!itemName) return;
+
+    const imageUrl = prompt("Colle ici l'URL de l'image de ton élément (optionnel) :");
+
+    const newItem = document.createElement('div');
+    newItem.className = 'item';
+    newItem.setAttribute('draggable', true);
+
+    if(imageUrl) {
+      const img = document.createElement('img');
+      img.src = imageUrl;
+      img.alt = itemName;
+      img.style.height = '50px';
+      img.style.marginRight = '8px';
+      img.style.verticalAlign = 'middle';
+      newItem.appendChild(img);
+    }
+
+    const textNode = document.createTextNode(itemName);
+    newItem.appendChild(textNode);
+
+    addDragEvents(newItem);
+
+    // Ajoute par défaut dans la colonne D
+    const colD = document.querySelector('.tier[data-tier="D"] .tier-container');
+    colD.appendChild(newItem);
+
+    saveTierlist();
+  }
+
+  // Double clic pour modifier le label des colonnes
+  document.querySelectorAll('.tier-label').forEach(label => {
+    label.addEventListener('dblclick', () => {
+      const currentText = label.textContent;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = currentText;
+      input.style.width = '40px';
+      input.style.fontWeight = 'bold';
+      input.style.textAlign = 'center';
+
+      label.textContent = '';
+      label.appendChild(input);
+      input.focus();
+
+      input.addEventListener('blur', () => {
+        let newText = input.value.trim();
+        if(newText === '') newText = currentText;
+        label.textContent = newText;
+        saveTierlist();
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter') {
+          input.blur();
+        }
+      });
+    });
+  });
+
+  // Sauvegarde la tierlist dans le localStorage
+  function saveTierlist() {
+    const tiers = {};
+    document.querySelectorAll('.tier').forEach(tier => {
+      const tierName = tier.querySelector('.tier-label').textContent;
+      const items = [];
+      tier.querySelectorAll('.item').forEach(item => {
+        let imgSrc = null;
+        const img = item.querySelector('img');
+        if(img) imgSrc = img.src;
+        const text = item.textContent;
+        items.push({ text, imgSrc });
+      });
+      tiers[tier.getAttribute('data-tier')] = { name: tierName, items };
+    });
+    localStorage.setItem('myTierlist', JSON.stringify(tiers));
+  }
+
+  // Charge la tierlist depuis le localStorage
+  function loadTierlist() {
+    const saved = localStorage.getItem('myTierlist');
+    if(!saved) return;
+    const tiers = JSON.parse(saved);
+
+    for(const tierKey in tiers) {
+      const tier = document.querySelector(`.tier[data-tier="${tierKey}"]`);
+      if(!tier) continue;
+
+      // Met à jour le nom de la colonne (label)
+      const label = tier.querySelector('.tier-label');
+      label.textContent = tiers[tierKey].name;
+
+      // Supprime les items actuels
+      const container = tier.querySelector('.tier-container');
+      container.innerHTML = '';
+
+      // Recrée les items
+      tiers[tierKey].items.forEach(({ text, imgSrc }) => {
+        const item = document.createElement('div');
+        item.className = 'item';
+        item.setAttribute('draggable', true);
+
+        if(imgSrc) {
+          const img = document.createElement('img');
+          img.src = imgSrc;
+          img.alt = text;
+          img.style.height = '50px';
+          img.style.marginRight = '8px';
+          img.style.verticalAlign = 'middle';
+          item.appendChild(img);
+        }
+
+        const textNode = document.createTextNode(text);
+        item.appendChild(textNode);
+
+        addDragEvents(item);
+        container.appendChild(item);
+      });
+    }
+
+    // Réassocier l'événement de double clic pour les labels recréés (au cas où)
+    document.querySelectorAll('.tier-label').forEach(label => {
+      label.addEventListener('dblclick', () => {
+        const currentText = label.textContent;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = currentText;
+        input.style.width = '40px';
+        input.style.fontWeight = 'bold';
+        input.style.textAlign = 'center';
+
+        label.textContent = '';
+        label.appendChild(input);
+        input.focus();
+
+        input.addEventListener('blur', () => {
+          let newText = input.value.trim();
+          if(newText === '') newText = currentText;
+          label.textContent = newText;
+          saveTierlist();
+        });
+
+        input.addEventListener('keydown', (e) => {
+          if(e.key === 'Enter') {
+            input.blur();
+          }
+        });
+      });
+    });
+  }
+
+  // Au chargement de la page, charge la tierlist sauvegardée
+  window.addEventListener('DOMContentLoaded', () => {
+    loadTierlist();
+  });
+  </script>
 </body>
 </html>
