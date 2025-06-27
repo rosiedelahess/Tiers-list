@@ -154,3 +154,34 @@ footer {
   background-color: #1f1f1f;
   border-top: 2px solid #2a2a2a;
 }
+.tier-item {
+  position: relative;
+  display: inline-block;
+  margin: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 6px;
+  max-width: 100px;
+  text-align: center;
+}
+
+.tier-item img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.delete-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ff4d4d;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 12px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
