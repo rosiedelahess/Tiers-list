@@ -1,83 +1,62 @@
-const ranks = ["S", "A", "B", "C", "D"];
-let tierNames = [...ranks];
+document.addEventListener('DOMContentLoaded', () => {
+  const addBtn = document.getElementById('add-element');
+  const imageInput = document.getElementById('image-upload');
+  const titleInput = document.getElementById('image-title');
+  const tierList = document.getElementById('tier-list');
+  
+  addBtn.addEventListener('click', () => {
+    const file = imageInput.files[0];
+    const title = titleInput.value.trim();
 
-function updateRankLabels() {
-  const tierContainers = document.querySelectorAll('.tier');
-  tierContainers.forEach((container, index) => {
-    const label = container.querySelector('.label');
-    label.textContent = tierNames[index];
-  });
-}
+    if (!file) {
+      alert("Merci de choisir une image.");
+      return;
+    }
+    if (!title) {
+      alert("Merci d'entrer un nom pour l’élément.");
+      return;
+    }
 
-function handleRankInputChange(index, value) {
-  tierNames[index] = value || ranks[index];
-  updateRankLabels();
-}
+    // Pour savoir dans quelle tier ajouter, on demande le rang aux inputs modifiables
+    // Ici, on peut demander à l’utilisateur où il veut ajouter, ou par défaut on peut choisir S (à adapter selon ta UX)
+    // Sinon, on peut prendre la valeur du premier input rang dans #rank-names, mais ça fait pas sens...
+    // Donc on peut créer un select pour le rang, mais tu n'en as pas. Je vais supposer S pour l'exemple.
 
-document.addEventListener("DOMContentLoaded", () => {
-  const rankInputs = document.querySelectorAll('#rank-names input');
-  rankInputs.forEach((input, index) => {
-    input.addEventListener('input', (e) => handleRankInputChange(index, e.target.value));
-  });
+    // Si tu veux, je peux te faire un select rang, sinon, par défaut on met en S
 
-  const dropzones = document.querySelectorAll('.tier');
-  dropzones.forEach(zone => {
-    zone.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      zone.classList.add("dragover");
-    });
+    const rank = prompt("Dans quel rang voulez-vous ajouter cet élément ? (S, A, B, C, D)").toUpperCase();
 
-    zone.addEventListener("dragleave", () => {
-      zone.classList.remove("dragover");
-    });
+    if (!['S', 'A', 'B', 'C', 'D'].includes(rank)) {
+      alert("Rang invalide. Choisissez parmi S, A, B, C ou D.");
+      return;
+    }
 
-    zone.addEventListener("drop", (e) => {
-      e.preventDefault();
-      zone.classList.remove("dragover");
-      const data = e.dataTransfer.getData("text/plain");
-      const dragged = document.getElementById(data);
-      zone.appendChild(dragged);
-    });
-  });
+    // Trouver la div tier correspondant au rang
+    const tierDiv = tierList.querySelector(`.tier[data-rank="${rank}"]`);
 
-  document.getElementById("add-image").addEventListener("click", () => {
-    const input = document.getElementById("image-upload");
-    const titleInput = document.getElementById("image-title");
-    const files = input.files;
-    if (!files.length) return;
+    if (!tierDiv) {
+      alert("Erreur : Rang introuvable.");
+      return;
+    }
 
-    Array.from(files).forEach((file, idx) => {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const container = document.createElement("div");
-        container.classList.add("item");
-        container.setAttribute("draggable", "true");
-        container.id = `item-${Date.now()}-${idx}`;
-        container.addEventListener("dragstart", (e) => {
-          e.dataTransfer.setData("text/plain", container.id);
-        });
+    const reader = new FileReader();
 
-        const img = document.createElement("img");
-        img.src = e.target.result;
+    reader.onload = function(e) {
+      // Création de l’élément visuel
+      const elemDiv = document.createElement('div');
+      elemDiv.classList.add('element');
+      elemDiv.innerHTML = `
+        <img src="${e.target.result}" alt="${title}" />
+        <div class="element-name">${title}</div>
+      `;
 
-        const caption = document.createElement("div");
-        caption.textContent = titleInput.value || "Sans titre";
+      tierDiv.appendChild(elemDiv);
 
-        container.appendChild(img);
-        container.appendChild(caption);
-        document.querySelector('.tier[data-rank="D"]').appendChild(container);
-      };
-      reader.readAsDataURL(file);
-    });
-  });
+      // Reset des inputs
+      imageInput.value = '';
+      titleInput.value = '';
+    };
 
-  document.getElementById("download-btn").addEventListener("click", () => {
-    const node = document.querySelector(".tier-list");
-    html2canvas(node).then(canvas => {
-      const link = document.createElement("a");
-      link.download = "tierlist.png";
-      link.href = canvas.toDataURL();
-      link.click();
-    });
+    reader.readAsDataURL(file);
   });
 });
