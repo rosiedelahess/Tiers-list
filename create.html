@@ -209,6 +209,56 @@
     });
   });
 </script>
+<!-- Ajoute ce input dans le body, juste avant le bouton -->
+<input type="file" id="imagePicker" accept="image/*" style="display:none" />
 
+<script>
+  const imagePicker = document.getElementById('imagePicker');
+  let selectedImageDataUrl = null;
+
+  function addItem() {
+    // Ouvre le sélecteur d'image
+    selectedImageDataUrl = null;
+    imagePicker.value = null; // reset pour réouvrir à chaque fois
+    imagePicker.click();
+
+    // Quand une image est choisie
+    imagePicker.onchange = () => {
+      const file = imagePicker.files[0];
+      if (!file) return;
+
+      // Lis le fichier en data URL
+      const reader = new FileReader();
+      reader.onload = e => {
+        selectedImageDataUrl = e.target.result;
+
+        // Demande le nom seulement APRES avoir sélectionné l'image
+        const name = prompt("Nom de l'élément à classer ?");
+        if (!name) return;
+
+        const newItem = document.createElement('div');
+        newItem.className = 'item';
+        newItem.setAttribute('draggable', true);
+
+        if (selectedImageDataUrl) {
+          const img = document.createElement('img');
+          img.src = selectedImageDataUrl;
+          img.alt = name;
+          newItem.appendChild(img);
+        }
+
+        const span = document.createElement('span');
+        span.textContent = name;
+        newItem.appendChild(span);
+
+        addDragEvents(newItem);
+
+        // Place dans la colonne D par défaut
+        document.querySelector('.tier[data-tier="D"] .tier-container').appendChild(newItem);
+      };
+      reader.readAsDataURL(file);
+    };
+  }
+</script>
 </body>
 </html>
